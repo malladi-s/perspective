@@ -322,7 +322,7 @@ class TestTable(object):
 
     def test_table_index(self):
         data = [{"a": 1, "b": 2}, {"a": 1, "b": 4}]
-        tbl = Table(data, {"index": "a"})
+        tbl = Table(data, index="a")
         assert tbl.size() == 1
         assert tbl.view().to_records() == [
             {"a": 1, "b": 4}
@@ -332,7 +332,7 @@ class TestTable(object):
 
     def test_table_limit(self):
         data = [{"a": 1, "b": 2}, {"a": 3, "b": 4}]
-        tbl = Table(data, {"limit": 1})
+        tbl = Table(data, limit=1)
         assert tbl.size() == 1
         assert tbl.view().to_records() == [
             {"a": 3, "b": 4}
@@ -356,36 +356,4 @@ class TestTable(object):
         tbl.replace(data2)
         assert tbl.view().to_records() == data2
 
-    # delete
-
-    def test_table_delete(self):
-        data = [{"a": 1, "b": 2}, {"a": 3, "b": 4}]
-        tbl = Table(data)
-        tbl.delete()
-        # don't segfault
-
-    def test_table_delete_callback(self):
-        sentinel = False
-
-        def callback():
-            nonlocal sentinel
-            sentinel = True
-        data = [{"a": 1, "b": 2}, {"a": 3, "b": 4}]
-        tbl = Table(data)
-        tbl.on_delete(callback)
-        tbl.delete()
-        assert sentinel == True
-
-    def test_table_delete_with_view(self):
-        sentinel = False
-
-        def callback():
-            nonlocal sentinel
-            sentinel = True
-        data = [{"a": 1, "b": 2}, {"a": 3, "b": 4}]
-        tbl = Table(data)
-        tbl.on_delete(callback)
-        view = tbl.view()
-        view.delete()
-        tbl.delete()
-        assert sentinel == True
+    

@@ -8,8 +8,8 @@
 import numpy as np
 import pandas
 from math import isnan
-from ._date_validator import _PerspectiveDateValidator
 from perspective.table.libbinding import t_dtype
+from ._date_validator import _PerspectiveDateValidator
 
 
 def _type_to_format(data_or_schema):
@@ -59,7 +59,7 @@ def _type_to_format(data_or_schema):
 
 
 class _PerspectiveAccessor(object):
-    '''Internal class to manage perspective table state'''
+    '''A uniform accessor that wraps data/schemas of varying formats with a common `marshal` function.'''
 
     def __init__(self, data_or_schema):
         self._format, self._data_or_schema = _type_to_format(data_or_schema)
