@@ -231,10 +231,12 @@ class Table(object):
 
         Called when `__del__` is called by GC.
         '''
-        if len(self._views) > 0:
+        if hasattr(self, '_views') and len(self._views) > 0:
             raise PerspectiveError("Cannot delete a Table with active views still linked to it - call delete() on each view, and try again.")
-        self._table.unregister_gnode(self._gnode_id)
-        [cb() for cb in self._delete_callbacks.get_callbacks()]
+        if hasattr(self, '_table') and hasattr(self, '_gnode_id'):
+            self._table.unregister_gnode(self._gnode_id)
+        if hasattr(self, '_delete_callbacks'):
+            [cb() for cb in self._delete_callbacks.get_callbacks()]
 
     def _update_callback(self):
         '''When the table is updated with new data, call each of the callbacks associated with the views.'''
