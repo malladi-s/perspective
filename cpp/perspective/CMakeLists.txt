@@ -172,8 +172,7 @@ if (PSP_WASM_BUILD)
 	include_directories("/usr/local/Homebrew/include")
 	include_directories("/usr/local/include" SYSTEM)
 	include_directories("/boost_includes")
-	psp_build_dep("rapidjson" "../../cmake/rapidjson.txt.in")
-	
+
 	set(EXTENDED_FLAGS " \
 		--bind \
 		--source-map-base ./build/ \
@@ -302,6 +301,7 @@ endif()
 psp_build_dep("hopscotch" "../../cmake/hopscotch.txt.in")
 psp_build_dep("ordered-map" "../../cmake/ordered-map.txt.in")
 psp_build_dep("double-conversion" "../../cmake/double-conversion.txt.in")
+psp_build_dep("rapidjson" "../../cmake/rapidjson.txt.in")
 psp_build_dep("arrow" "../../cmake/arrow.txt.in")
 
 #####################
@@ -488,7 +488,7 @@ if (PSP_CPP_BUILD_TESTS)
 	if (WIN32)
 	  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 	endif()
-	psp_build_dep("googletest" "../../cmake/GTest.txt.in")
+	# psp_build_dep("googletest" "../../cmake/GTest.txt.in")
 
 	add_subdirectory(test)
 	add_custom_target(gcov

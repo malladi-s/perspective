@@ -6,7 +6,7 @@
 # the Apache License 2.0.  The full license can be found in the LICENSE file.
 #
 import numpy as np
-import pandas
+import pandas as pd
 from math import isnan
 from perspective.table.libbinding import t_dtype
 from ._date_validator import _PerspectiveDateValidator
@@ -41,7 +41,7 @@ def _type_to_format(data_or_schema):
         # Can't process
         raise NotImplementedError("Dict values must be list or type!")
     else:
-        if not (isinstance(data_or_schema, pandas.DataFrame) or isinstance(data_or_schema, pandas.Series)):
+        if not (isinstance(data_or_schema, pd.DataFrame) or isinstance(data_or_schema, pd.Series)):
             # if pandas not installed or is not a dataframe or series
             raise NotImplementedError("Must be dict or list!")
         else:
@@ -111,6 +111,14 @@ class _PerspectiveAccessor(object):
         except (KeyError, IndexError):
             return None
 
+    def _column(self, cidx, type):
+        '''get as numpy if applicable'''
+        column_name = self._names[cidx]
+        if self._format == 1 and isinstance(self._data_or_schema[column_name], np.ndarray):
+            # copy numpy in bulk
+            return self._data_or_schema[column_name]
+        return None
+
     def marshal(self, cidx, ridx, type):
         '''Returns the element at the specified column and row index, and marshals it into an object compatible with the core engine's `fill` method.
 
@@ -125,10 +133,6 @@ class _PerspectiveAccessor(object):
             object or None
         '''
         column_name = self._names[cidx]
-        if self._format == 1 and isinstance(self._data_or_schema[column_name], np.ndarray):
-            # copy numpy in bulk
-            return self._data_or_schema[column_name]
-
         val = self.get(column_name, ridx)
 
         if val is None:

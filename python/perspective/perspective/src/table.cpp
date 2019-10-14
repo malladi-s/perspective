@@ -115,7 +115,7 @@ std::shared_ptr<Table> make_table_py(t_val table, t_data_accessor accessor, t_va
     } else {
         row_count = accessor.attr("row_count")().cast<std::int32_t>();
         data_table.extend(row_count);
-        _fill_data(data_table, accessor, input_schema, index, offset, limit, is_arrow, is_update);
+        _fill_data(data_table, accessor, input_schema, index, offset, limit, is_update);
     }
 
      if (!computed.is_none()) {
