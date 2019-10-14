@@ -104,7 +104,7 @@ class View(object):
 
         If the columns are aggregated, their aggregated types will be shown.
 
-        Params:
+        Args:
             as_string (bool) : returns data types as string representations, if True
 
         Returns:
@@ -151,7 +151,7 @@ class View(object):
     def remove_update(self, callback):
         '''Given a callback function, remove it from the list of callbacks.
 
-        Params:
+        Args:
             callback (func) : a function reference that will be removed.
         '''
         if not callable(callback):
@@ -161,7 +161,7 @@ class View(object):
     def on_delete(self, callback):
         '''Set a callback to be run when the `delete()` method is called on the View.
 
-        Params:
+        Args:
             callback (func) : a callback to run after `delete()` has been called.
 
         Examples:
@@ -196,7 +196,7 @@ class View(object):
 
         If the view is aggregated, the aggregated dataset will be returned.
 
-        Params:
+        Args:
             options (dict) :
                 user-provided options that specifies what data to return:
                 - start_row: defaults to 0
@@ -217,7 +217,7 @@ class View(object):
 
         If the view is aggregated, the aggregated dataset will be returned.
 
-        Params:
+        Args:
             options (dict) :
                 user-provided options that specifies what data to return:
                 - start_row: defaults to 0
@@ -238,7 +238,7 @@ class View(object):
 
         If the view is aggregated, the aggregated dataset will be returned.
 
-        Params:
+        Args:
             options (dict) :
                 user-provided options that specifies what data to return:
                 - start_row: defaults to 0
@@ -261,7 +261,7 @@ class View(object):
 
         If the view is aggregated, the aggregated dataset will be returned.
 
-        Params:
+        Args:
             options (dict) :
                 user-provided options that specifies what data to return:
                 - start_row: defaults to 0
@@ -276,6 +276,25 @@ class View(object):
         '''
         cols = self.to_numpy(**options)
         return pandas.DataFrame(cols)
+
+    def to_csv(self, **options):
+        '''Serialize the view's dataset into a CSV string.
+
+        Args:
+            options (dict) :
+                user-provided options that specifies what data to return:
+                - start_row: defaults to 0
+                - end_row: defaults to the number of total rows in the view
+                - start_col: defaults to 0
+                - end_col: defaults to the total columns in the view
+                - index: whether to return an implicit pkey for each row. Defaults to False
+                - leaves_only: whether to return only the data at the end of the tree. Defaults to False
+                - date_format: how `date` and `datetime` objects should be formatted in the CSV. Must be a valid date formatting string.
+
+        Returns:
+            str : a CSV-formatted string containing the serialized data.
+        '''
+        return self.to_df(**options).to_csv(date_format=options.pop("date_format", "%Y/%m/%d %H:%M:%S"))
 
     @wraps(to_records)
     def to_json(self, **options):
@@ -310,7 +329,3 @@ class View(object):
             callback(cache["row_delta"])
         else:
             callback()
-
-    def __del__(self):
-        '''Make sure callbacks are cleaned up when GC is called.'''
-        self.delete()
