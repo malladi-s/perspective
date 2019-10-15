@@ -313,8 +313,17 @@ _fill_col_numpy(t_data_table& tbl, std::shared_ptr<t_column> col, std::string na
     T *array = (T *)sample.cast<py::array_t<T>>().request().ptr;
     t_uindex nrows = col->size();
 
+    std::cout << "using numpy loader" << std::endl;
     for (auto i = 0; i < nrows; ++i) {
         T item = array[i];
+        if(npy_isnan(item)){
+            if (is_update) {
+                col->unset(i);
+            } else {
+                col->clear(i);
+            }
+            continue;
+        }
         col->set_nth(i, item);
     }
 }
