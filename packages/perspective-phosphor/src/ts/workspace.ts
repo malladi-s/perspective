@@ -89,7 +89,7 @@ export class PerspectiveWorkspace extends SplitPanel {
         this.masterpanel.addWidget(widget);
         widget.viewer.restyleElement();
 
-        widget.node.addEventListener("perspective-click", this.onPerspectiveClick);
+        widget.viewer.addEventListener("perspective-click", this.onPerspectiveClick);
     }
 
     private makeDetail(widget: PerspectiveWidget): void {
@@ -105,7 +105,7 @@ export class PerspectiveWorkspace extends SplitPanel {
         }
 
         widget.viewer.restyleElement();
-        widget.node.removeEventListener("perspective-click", this.onPerspectiveClick);
+        widget.viewer.removeEventListener("perspective-click", this.onPerspectiveClick);
     }
 
     private toggleMasterDetail(widget: PerspectiveWidget): void {
